@@ -62,28 +62,25 @@ def display_gaming_buttons():
     # Keep a reference to the image to prevent garbage collection
     background_label.image = background_photo
 
-     # Create a frame to hold the gaming buttons
-    button_frame = ctk.CTkFrame(app)
-    button_frame.place(relx=0.5, rely=0.1, anchor='n')  # Center the frame at the top center of the window
-
-    # Configure grid to make the buttons align properly
-    button_frame.grid_columnconfigure(0, weight=1)
-    button_frame.grid_columnconfigure(1, weight=1)
-    button_frame.grid_columnconfigure(2, weight=1)
-    button_frame.grid_columnconfigure(3, weight=1)
-
     # Create the gaming buttons and add them to the frame
-    steam_button = ctk.CTkButton(button_frame, text="Steam", fg_color="red", command=lambda: print("Steam login"))
-    steam_button.grid(row=0, column=0, padx=10, pady=10)
+    steam_button = ctk.CTkButton(app, text="Steam", fg_color="red", command=lambda: print("Steam login"))
+    steam_button.grid(row=0, column=0, padx=10, pady=9)
 
-    playstation_button = ctk.CTkButton(button_frame, text="PlayStation", fg_color="red", command=lambda: print("PlayStation login"))
-    playstation_button.grid(row=0, column=1, padx=10, pady=10)
+    playstation_button = ctk.CTkButton(app, text="PlayStation", fg_color="red", command=lambda: print("PlayStation login"))
+    playstation_button.grid(row=0, column=1, padx=90, pady=10)
 
-    xbox_button = ctk.CTkButton(button_frame, text="Xbox", fg_color="red", command=lambda: print("Xbox login"))
-    xbox_button.grid(row=0, column=2, padx=10, pady=10)
+    xbox_button = ctk.CTkButton(app, text="Xbox", fg_color="red", command=lambda: print("Xbox login"))
+    xbox_button.grid(row=0, column=2, padx=90, pady=10)
 
-    ea_button = ctk.CTkButton(button_frame, text="EA", fg_color="red", command=lambda: print("EA login"))
-    ea_button.grid(row=0, column=3, padx=10, pady=10)
+    ea_button = ctk.CTkButton(app, text="EA", fg_color="red", command=lambda: print("EA login"))
+    ea_button.grid(row=0, column=3, padx=90, pady=10)
+
+    epic_button = ctk.CTkButton(app, text="Epic", fg_color="red", command=lambda: print("Epic login"))
+    epic_button.grid(row=0, column=4, padx=90, pady=10)
+
+    gog_button = ctk.CTkButton(app, text="GoG", fg_color="red", command=lambda: print("GoG login"))
+    gog_button.grid(row=0, column=5, padx=90, pady=10)
+    
     
 # App Frame
 app = ctk.CTk()
