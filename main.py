@@ -63,22 +63,22 @@ def display_gaming_buttons():
     background_label.image = background_photo
 
     # Create the gaming buttons and add them to the frame
-    steam_button = ctk.CTkButton(app, text="Steam", fg_color="red", command=lambda: print("Steam login"))
-    steam_button.grid(row=0, column=0, padx=10, pady=9)
+    steam_button = ctk.CTkButton(app, text="Steam", fg_color="red", corner_radius=0, command=lambda: print("Steam login"))
+    steam_button.grid(row=0, column=0, padx=90, pady=10)
 
-    playstation_button = ctk.CTkButton(app, text="PlayStation", fg_color="red", command=lambda: print("PlayStation login"))
+    playstation_button = ctk.CTkButton(app, text="PlayStation", fg_color="red", corner_radius=0, command=lambda: print("PlayStation login"))
     playstation_button.grid(row=0, column=1, padx=90, pady=10)
 
-    xbox_button = ctk.CTkButton(app, text="Xbox", fg_color="red", command=lambda: print("Xbox login"))
+    xbox_button = ctk.CTkButton(app, text="Xbox", fg_color="red", corner_radius=0, command=lambda: print("Xbox login"))
     xbox_button.grid(row=0, column=2, padx=90, pady=10)
 
-    ea_button = ctk.CTkButton(app, text="EA", fg_color="red", command=lambda: print("EA login"))
+    ea_button = ctk.CTkButton(app, text="EA", fg_color="red", corner_radius=0, command=lambda: print("EA login"))
     ea_button.grid(row=0, column=3, padx=90, pady=10)
 
-    epic_button = ctk.CTkButton(app, text="Epic", fg_color="red", command=lambda: print("Epic login"))
+    epic_button = ctk.CTkButton(app, text="Epic", fg_color="red", corner_radius=0, command=lambda: print("Epic login"))
     epic_button.grid(row=0, column=4, padx=90, pady=10)
 
-    gog_button = ctk.CTkButton(app, text="GoG", fg_color="red", command=lambda: print("GoG login"))
+    gog_button = ctk.CTkButton(app, text="GoG", fg_color="red", corner_radius=0, command=lambda: print("GoG login"))
     gog_button.grid(row=0, column=5, padx=90, pady=10)
     
     
