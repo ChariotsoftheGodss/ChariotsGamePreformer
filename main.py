@@ -1,5 +1,5 @@
 import customtkinter as ctk
-from tkinter import PhotoImage
+import tkinter.font as tkfont
 from Registration import open_registration_window
 from database import create_user_table, verify_user_credentials
 from PIL import Image, ImageTk
@@ -21,7 +21,7 @@ def button_signin():
     label_email = ctk.CTkLabel(signin_window, text="Email:")
     label_email.pack(padx=10, pady=5)
     entry_email = ctk.CTkEntry(signin_window)
-    entry_email.pack(padx=10, pady=5)
+    entry_email.pack(padx=10, pady=5) 
 
     label_password = ctk.CTkLabel(signin_window, text="Password:")
     label_password.pack(padx=10, pady=5)
@@ -33,7 +33,7 @@ def button_signin():
         email = entry_email.get()
         password = entry_password.get()
 
-        if verify_user_credentials(email, password):
+        if verify_user_credentials(password, email):
             print(f"User {email} signed in successfully!")
             signin_window.destroy()  # Close the window after successful sign-in
             display_gaming_buttons()  # Show the gaming client buttons
@@ -49,18 +49,6 @@ def display_gaming_buttons():
     signIn.pack_forget()
     registerUser.pack_forget()
     title.pack_forget()
-
-    # Use Pillow to load the image
-    background_image = Image.open(r'C:\Users\Grant\Downloads\Designer.png')
-    background_image = background_image.resize((app.winfo_screenwidth(), app.winfo_screenheight()), Image.Resampling.LANCZOS)
-    background_photo = ImageTk.PhotoImage(background_image)
-
-    # Create a background image label
-    background_label = ctk.CTkLabel(app, image=background_photo, text="")
-    background_label.place(x=0, y=0, relwidth=1, relheight=1)
-    
-    # Keep a reference to the image to prevent garbage collection
-    background_label.image = background_photo
 
     # Create the gaming buttons and add them to the frame
     steam_button = ctk.CTkButton(app, text="Steam", fg_color="red", corner_radius=0, command=lambda: print("Steam login"))
@@ -87,16 +75,29 @@ app = ctk.CTk()
 app.geometry("1920x1080")
 app.title("Chariots Game Reporter")
 
+# Use Pillow to load the image
+background_image = Image.open(r'C:\Users\Grant\Downloads\Designer.png')
+background_image = background_image.resize((app.winfo_screenwidth(), app.winfo_screenheight()), Image.Resampling.LANCZOS)
+background_photo = ImageTk.PhotoImage(background_image)
+
+# Create a background image label
+background_label = ctk.CTkLabel(app, corner_radius=0, image=background_photo, text="")
+background_label.place(x=0, y=0, relwidth=1, relheight=1)
+    
+# Keep a reference to the image to prevent garbage collection
+background_label.image = background_photo
+
 # Adding UI Elements
-title = ctk.CTkLabel(app, text="Sign into your Account or Register a new account!")
+title = ctk.CTkButton(app, corner_radius=0, fg_color="red", text="Sign into your Account or Register a new account! ", text_color="White", font=ctk.CTkFont(family="Helvetica", size=18, weight="bold"))
 title.pack(padx=10, pady=10)
+title.configure(state='disabled')
 
 # Sign in Button
-signIn = ctk.CTkButton(app, text="Sign In", fg_color="red", command=button_signin)
+signIn = ctk.CTkButton(app, corner_radius=0, text="Sign In", fg_color="red", command=button_signin)
 signIn.pack(padx=10, pady=10)
 
 # Register Button
-registerUser = ctk.CTkButton(app, text="Register User", fg_color="red", command=lambda: open_registration_window(app))
+registerUser = ctk.CTkButton(app, corner_radius=0, text="Register User", fg_color="red", command=lambda: open_registration_window(app))
 registerUser.pack(padx=20, pady=20)
 
 # Run app
