@@ -1,3 +1,4 @@
+import re
 import customtkinter as ctk
 from database import register_user
 
@@ -39,12 +40,32 @@ def open_registration_window(app):
         password = entry_password.get()
         confirm_password = entry_confirm_password.get()
 
-        if password == confirm_password:
-            register_user(email, username, password)  # Remove confirm_password from this call
-            print(f"Registered new user: {username} with email: {email}")
-            register_window.destroy()  # Close the window after registration
-        else:
+        # Email Validation regex
+        email_regex = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
+
+         # Password complexity check
+        password_regex = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$'
+
+        # Validate email is an email
+        if not re.match(email_regex, email):
+            print("Invalid email format!")
+            return
+        
+        # Validate password Complexity for Security
+        if not re.match(password_regex, password):
+            print("Password must be at least 8 characters long and include at least 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character.")
+            return
+        
+          # Check if passwords match
+        if password != confirm_password:
             print("Passwords do not match!")
+            return
+        
+        # If all good, then regiser the user
+        register_user(email, username, password)
+        print(f"Registered new user: {username} with email: {email}")
+        register_window.destroy() # Close the window
+
 
     # Register button (make sure it's created in the right scope)
     register_button = ctk.CTkButton(register_window, text="Register", fg_color="red", command=on_register)
