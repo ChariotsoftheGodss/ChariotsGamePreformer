@@ -1,12 +1,30 @@
 import customtkinter as ctk
 import webbrowser
-from flask import Flask, request, redirect
+from flask import Flask, request
 from threading import Thread
 from Registration import open_registration_window
 from database import create_user_table, verify_user_credentials
+from Oauth.steam_auth import display_user_info, fetch_user_info
+
+# Initialize Flask
+flask_app  = Flask(__name__)
 
 # Initialize database
 create_user_table()
+
+# App Frame
+app = ctk.CTk()
+app.geometry("1920x1080")
+app.title("Chariots Game Reporter")
+
+# Adding UI Elements
+title = ctk.CTkButton(app, corner_radius=15, fg_color="red", text="Sign into your Account or Register a new account! ", text_color="White", font=ctk.CTkFont(family="Helvetica", size=18, weight="bold"))
+title.pack(padx=10, pady=10)
+title.configure(state='disabled')
+
+# Register Button
+registerUser = ctk.CTkButton(app, corner_radius=15, border_width=2, text="Register User", fg_color="red", command=lambda: open_registration_window(app))
+registerUser.pack(padx=20, pady=20)
 
 def button_signin():
     # Create a new window
@@ -44,6 +62,10 @@ def button_signin():
     # Sign-In Button
     signin_button = ctk.CTkButton(signin_window, text="Sign In", fg_color="red", command=on_signin)
     signin_button.pack(padx=10, pady=10)
+
+# Sign in Button
+signIn = ctk.CTkButton(app, corner_radius=15, text="Sign In", fg_color="red", command=button_signin)
+signIn.pack(padx=10, pady=10)
 
 def display_tabs():
     # Hide the sign-in and register buttons
@@ -88,22 +110,6 @@ def display_tabs():
     gog_button.pack(padx=10, pady=10)
 
 # Steam Login and Oauth
-# Initialize Flask
-app = Flask(__name__)
-
-def run_flask():
-    app.run(port=5000)
-
-@app.route('/steam/callback')
-def steam_callback():
-    steam_id = request.args.get('openid.claimed_id')  # Adjust based on your request handling
-    if steam_id:
-        print(f"User logged in with Steam ID: {steam_id}")
-        # You can update the UI or save the Steam ID
-        return "Logged in successfully! You can close this window now.", 200
-    else:
-        return "Failed to log in.", 400
-
 def steam_login():
     # Generate the Steam OpenID URL
     steam_openid_url = "https://steamcommunity.com/openid/login?" \
@@ -116,23 +122,47 @@ def steam_login():
     # Open the Steam login page in the default web browser
     webbrowser.open(steam_openid_url)
 
-# App Frame
-app = ctk.CTk()
-app.geometry("1920x1080")
-app.title("Chariots Game Reporter")
+def create_steam_frame(tabview):
+    # Create a frame in the Steam tab to display information
+    steam_frame = ctk.CTkFrame(tabview.tab("Steam"))
+    steam_frame.pack(expand=True, fill="both", padx=20, pady=20)
 
-# Adding UI Elements
-title = ctk.CTkButton(app, corner_radius=15, fg_color="red", text="Sign into your Account or Register a new account! ", text_color="White", font=ctk.CTkFont(family="Helvetica", size=18, weight="bold"))
-title.pack(padx=10, pady=10)
-title.configure(state='disabled')
+    return steam_frame
 
-# Sign in Button
-signIn = ctk.CTkButton(app, corner_radius=15, text="Sign In", fg_color="red", command=button_signin)
-signIn.pack(padx=10, pady=10)
+def display_user_games(games, steam_frame):
+    # Clear the frame
+    for widget in steam_frame.winfo_children():
+        widget.destroy()
 
-# Register Button
-registerUser = ctk.CTkButton(app, corner_radius=15, border_width=2, text="Register User", fg_color="red", command=lambda: open_registration_window(app))
-registerUser.pack(padx=20, pady=20)
+    # Create a label for the games section
+    games_label = ctk.CTkLabel(steam_frame, text="Your Games:")
+    games_label.pack(pady=10)
 
-# Run app
+    # Create a listbox to display games on the account
+    games_listbox = ctk.CTkTextbox(steam_frame, height=15)
+    games_listbox.pack(padx=10, pady=10, expand=True, fill="both")
+
+    # Populate the listbox with game names
+    for game in games:
+        games_listbox.insert("end", f"{game['name']} (Playtime: {game['playtime_forever']} mins)")
+
+
+@flask_app.route('/steam/callback')
+def steam_callback():
+    steam_id = request.args.get('openid.claimed_id')
+    if steam_id:
+        print(f"User logged in with Steam ID: {steam_id}")
+        user_info, games = fetch_user_info(steam_id, '26089045DDC2DD8258EB919713DE68DA')
+        display_user_info(user_info, games)
+        display_user_games(games)
+        return "Logged in successfully! You can close this window now.", 200
+    else:
+        return "Failed to log in.", 400
+    
+# Run Flask in a separate thread
+def run_flask():
+    flask_app.run(port=5000)
+
+if __name__ == "__main__":
+    Thread(target=run_flask).start()
 app.mainloop()
