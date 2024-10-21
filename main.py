@@ -9,7 +9,7 @@ from database import create_user_table, verify_user_credentials
 create_user_table()
 
 def button_signin():
-    # Create a new window (subwindow)
+    # Create a new window
     signin_window = ctk.CTkToplevel()
     signin_window.title("Sign In")
     signin_window.geometry("400x400")
@@ -37,7 +37,7 @@ def button_signin():
         if verify_user_credentials(email, password):
             print(f"User {email} signed in successfully!")
             signin_window.destroy()  # Close the window after successful sign-in
-            display_tabs()  # Show the gaming client tabs
+            display_tabs()  # Show the client tabs
         else:
             print("Invalid email or password!")
 
@@ -45,17 +45,13 @@ def button_signin():
     signin_button = ctk.CTkButton(signin_window, text="Sign In", fg_color="red", command=on_signin)
     signin_button.pack(padx=10, pady=10)
 
-    # Steam login UI elements. (Current placeholders for now really.)
-    label_steam_info = ctk.CTkLabel(steam_window, text="Steam Login Coming Soon")
-    label_steam_info.pack(padx=10, pady=10)
-
 def display_tabs():
     # Hide the sign-in and register buttons
     signIn.pack_forget()
     registerUser.pack_forget()
     title.pack_forget()
 
-    # Create CTkTabview for switching between platforms
+    # Create CTkTabview for switching between client platforms
     tabview = ctk.CTkTabview(app)
     tabview.pack(expand=True, fill="both", padx=20, pady=20)
 
@@ -124,18 +120,6 @@ def steam_login():
 app = ctk.CTk()
 app.geometry("1920x1080")
 app.title("Chariots Game Reporter")
-
-# Use Pillow to load the image
-# background_image = Image.open(r'C:\Users\Grant\Downloads\Designer.png')
-# background_image = background_image.resize((app.winfo_screenwidth(), app.winfo_screenheight()), Image.Resampling.LANCZOS)
-# background_photo = ImageTk.PhotoImage(background_image)
-
-# Create a background image label
-# background_label = ctk.CTkLabel(app, corner_radius=0, image=background_photo, text="")
-# background_label.place(x=0, y=0, relwidth=1, relheight=1)
-    
-# Keep a reference to the image to prevent garbage collection
-# background_label.image = background_photo
 
 # Adding UI Elements
 title = ctk.CTkButton(app, corner_radius=15, fg_color="red", text="Sign into your Account or Register a new account! ", text_color="White", font=ctk.CTkFont(family="Helvetica", size=18, weight="bold"))
