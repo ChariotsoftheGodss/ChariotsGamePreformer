@@ -17,12 +17,12 @@ def register_user(email, username, password):
         conn.execute("INSERT INTO users (email, username, password) VALUES (?, ?, ?)",
                      (email, username, hashed_password))
 
-def verify_user_credentials(username, password):
+def verify_user_credentials(email, password):
     conn = create_connection()
     cursor = conn.cursor()
 
     # Retrieve the stored password hash for the given email
-    cursor.execute("SELECT password FROM users WHERE email = ?", (username,))
+    cursor.execute("SELECT password FROM users WHERE email = ?", (email,))
     row = cursor.fetchone()
 
     if row:

@@ -1,0 +1,22 @@
+from flask import Flask, request, redirect
+
+app = Flask(__name__)
+
+@app.route('/steam/callback')
+def steam_callback():
+    # Handle the callback from Steam here
+    # You will retrieve the user's Steam ID from the request
+
+    steam_id = request.args.get('openid.claimed_id')  # Adjust based on your actual request handling
+    if steam_id:
+        # Process the Steam ID (e.g., save to your database, update UI, etc.)
+        print(f"User logged in with Steam ID: {steam_id}")
+
+        # Close the Flask server after capturing the ID
+        return "Logged in successfully! You can close this window now.", 200
+    else:
+        return "Failed to log in.", 400
+
+if __name__ == '__main__':
+    app.run(port=5000)
+    
