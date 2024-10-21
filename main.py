@@ -4,7 +4,7 @@ from flask import Flask, request
 from threading import Thread
 from Registration import open_registration_window
 from database import create_user_table, verify_user_credentials
-from Oauth.steam_auth import display_user_info, fetch_user_info
+from Oauth.steam_auth import STEAM_API_KEY, display_user_info, fetch_user_info
 
 # Initialize Flask
 flask_app  = Flask(__name__)
@@ -152,7 +152,7 @@ def steam_callback():
     steam_id = request.args.get('openid.claimed_id')
     if steam_id:
         print(f"User logged in with Steam ID: {steam_id}")
-        user_info, games = fetch_user_info(steam_id, '26089045DDC2DD8258EB919713DE68DA')
+        user_info, games = fetch_user_info(steam_id, STEAM_API_KEY)
         display_user_info(user_info, games)
         display_user_games(games)
         return "Logged in successfully! You can close this window now.", 200
