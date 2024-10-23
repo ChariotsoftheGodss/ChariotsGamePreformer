@@ -1,21 +1,48 @@
-from flask import Flask, request, redirect
+from flask import Flask, request, redirect, url_for
+import requests
+
+from steam_auth import STEAM_API_KEY
 
 app = Flask(__name__)
 
 @app.route('/steam/callback')
 def steam_callback():
-    # Handle the callback from Steam - TO DO
-    # Retrieve the user's Steam ID from the request
+    # Extract OpenID parameters
+    openid_mode = request.args.get('openid.mode')
+    claimed_id = request.args.get('openid.claimed_id')
+    sig = request.args.get('openid.sig')
 
-    steam_id = request.args.get('openid.claimed_id')
-    if steam_id:
-        # Process the Steam ID (e.g., save to database, update UI, etc.)
-        print(f"User logged in with Steam ID: {steam_id}")
+    # Check if the OpenID authentication was successful
+    if openid_mode != 'id_res':
+        return "OpenID authentication failed.", 400
 
-        # Close the Flask server after capturing the ID
-        return "Logged in successfully! You can close this window now.", 200
-    else:
-        return "Failed to log in.", 400
+    # Here you can further validate the signature (sig) and other parameters
 
-if __name__ == '__main__':
-    app.run(port=5000)
+    # Proceed to fetch user info
+    steam_id = claimed_id.split('/')[-1]  # Extract the Steam ID from the claimed ID
+    user_info, games = fetch_user_info(steam_id, STEAM_API_KEY)
+
+    # Handle the fetched user info and games
+    # For example, you might want to save it to a session or database
+
+    return redirect(url_for('some_other_function'))  # Redirect after successful login
+
+def fetch_user_info(steam_id, api_key):
+    player_summary_url = f"http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={api_key}&steamids={steam_id}"
+    response = requests.get(player_summary_url)
+
+    if response.status_code != 200:
+        print(f"Error fetching player summary: {response.status_code} - {response.text}")
+        return None, []
+
+    try:
+        player_data = response.json()
+    except ValueError:
+        print(f"Error decoding JSON for player summary: {response.text}")
+        return None, []
+
+    # Process the player data and return user info and games
+    return player_data, []  # Replace with actual data processing
+
+if __name__ == "__main__":
+    app.run(debug=True)
